@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blood Product Administration — Student Documentation</title>
+  <style>
+    :root{ --bg:#0f172a; --panel:#0b1220; --text:#e5e7eb; --muted:#94a3b8; --border:#1f2937; --brand:#60a5fa; --ok:#34d399; --warn:#fcd34d; --err:#f87171; }
+    html,body{height:100%}
+    body{margin:0; font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; background:radial-gradient(1200px 800px at 10% -10%, rgba(96,165,250,.12), transparent 60%), radial-gradient(900px 600px at 110% -20%, rgba(52,211,153,.10), transparent 50%), var(--bg); color:var(--text)}
+    .container{max-width:1100px; margin:36px auto; padding:0 16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border:1px solid var(--border); border-radius:18px; padding:22px; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    h1{margin:0 0 6px; font-size:clamp(22px,3.6vw,32px)}
+    p.lead{margin:0; color:var(--muted)}
+    fieldset{border:1px dashed var(--border); border-radius:14px; padding:14px; margin-top:16px}
+    legend{padding:0 8px; color:var(--brand); font-weight:700}
+    label{display:block; font-weight:600; margin:10px 0 6px}
+    input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea, select{width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:var(--panel); color:var(--text); outline:none}
+    input:focus, textarea:focus, select:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(96,165,250,.18)}
+    textarea{min-height:100px; resize:vertical}
+    .grid{display:grid; gap:16px}
+    @media(min-width:900px){ .grid.two{grid-template-columns:1fr 1fr} .grid.three{grid-template-columns:repeat(3,1fr)} .grid.four{grid-template-columns:repeat(4,1fr)} }
+    .checks{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:8px 14px; margin-top:6px}
+    .checks label{display:flex; align-items:center; gap:10px; margin:0; font-weight:500}
+    .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+    .badge{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:700}
+    .badge.ok{background:rgba(34,197,94,.12); color:#86efac; border:1px solid rgba(34,197,94,.35)}
+    .badge.warn{background:rgba(252,211,77,.12); color:#fde68a; border:1px solid rgba(252,211,77,.35)}
+    .badge.err{background:rgba(248,113,113,.12); color:#fecaca; border:1px solid rgba(248,113,113,.35)}
+    .actions{display:flex; flex-wrap:wrap; gap:10px; padding-top:10px}
+    .actions button{appearance:none; border:none; cursor:pointer; padding:12px 16px; border-radius:12px; font-weight:700; color:#0b1220; background:var(--brand); box-shadow:0 8px 18px rgba(96,165,250,.25)}
+    .actions button.secondary{background:#1f2937; color:var(--text); box-shadow:none; border:1px solid var(--border)}
+    .actions button.success{background:var(--ok); box-shadow:0 8px 18px rgba(52,211,153,.22)}
+    .actions .right{margin-left:auto}
+    .status{margin-top:10px; font-size:14px; color:var(--muted)}
+    table{width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:12px; overflow:hidden}
+    th, td{border-bottom:1px solid var(--border); padding:10px 12px; text-align:left}
+    th{font-weight:700; color:#cbd5e1}
+    @media print{ body{background:#fff; color:#000} .actions,.hide-print{display:none !important} .card{box-shadow:none; border-color:#000} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="card" style="margin-bottom:16px">
+      <h1>Blood Product Administration — Interactive Student Form</h1>
+      <p class="lead">Complete this documentation for simulation or clinical learning. Autosaves locally; export JSON or print to PDF for submission.</p>
+    </header>
+
+    <form id="blood-form" class="card" novalidate>
+      <!-- ID -->
+      <fieldset>
+        <legend>Identification</legend>
+        <div class="grid three">
+          <div>
+            <label for="studentName">Student Name <span id="nameReq" class="hide-print" style="color:#fca5a5" hidden>required</span></label>
+            <input id="studentName" name="studentName" type="text" autocomplete="name" placeholder="First Last" required />
+          </div>
+          <div>
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" />
+          </div>
+          <div>
+            <label for="instructor">Instructor</label>
+            <input id="instructor" name="instructor" type="text" />
+          </div>
+        </div>
+        <div class="grid three">
+          <div>
+            <label for="ptName">Patient Name</label>
+            <input id="ptName" name="ptName" type="text" />
+          </div>
+          <div>
+            <label for="dob">DOB</label>
+            <input id="dob" name="dob" type="date" />
+          </div>
+          <div>
+            <label for="mrn">MRN</label>
+            <input id="mrn" name="mrn" type="text" />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Pre‑transfusion Checklist & Verification -->
+      <fieldset>
+        <legend>Pre‑Transfusion Checklist & Patient Verification</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="pre" value="Order verified in EMR"/> Order verified in EMR</label>
+          <label><input type="checkbox" name="pre" value="Patient consent documented"/> Patient consent documented</label>
+          <label><input type="checkbox" name="pre" value="Blood product prescription matched"/> Blood product prescription matched</label>
+          <label><input type="checkbox" name="pre" value="Patient ID band verified (name & MRN)"/> Patient ID band verified (name & MRN)</label>
+          <label><input type="checkbox" name="pre" value="Patient states full name & DOB"/> Patient states full name & DOB</label>
+        </div>
+        <div class="grid three">
+          <div>
+            <label for="productType">Blood Product Type</label>
+            <select id="productType" name="productType" required>
+              <option value="">—</option>
+              <option>PRBCs</option>
+              <option>FFP</option>
+              <option>Platelets</option>
+              <option>Cryoprecipitate</option>
+              <option>Whole Blood</option>
+            </select>
+          </div>
+          <div>
+            <label for="unitNumber">Unit Number (scan or type)</label>
+            <input id="unitNumber" name="unitNumber" type="text" placeholder="e.g., A123456789" />
+          </div>
+          <div>
+            <label for="expDate">Unit Expiration Date</label>
+            <input id="expDate" name="expDate" type="date" />
+          </div>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" name="verify" value="2 RN check completed"/> <strong>2 RN check</strong> completed</label>
+          <label><input type="checkbox" name="verify" value="ABO/Rh compatibility confirmed"/> ABO/Rh compatibility confirmed</label>
+          <label><input type="checkbox" name="verify" value="Visual inspection normal (no clots/discoloration)"/> Visual inspection normal (no clots/discoloration)</label>
+        </div>
+      </fieldset>
+
+      <!-- Pre‑transfusion Vitals & Baseline Assessment -->
+      <fieldset>
+        <legend>Pre‑Transfusion Vitals & Baseline Assessment</legend>
+        <div class="grid four">
+          <div><label for="temp">Temperature (°F)</label><input id="temp" name="temp" type="number" step="0.1" /></div>
+          <div><label for="hr">Heart Rate (bpm)</label><input id="hr" name="hr" type="number" /></div>
+          <div><label for="bp">Blood Pressure (mmHg)</label><input id="bp" name="bp" type="text" placeholder="e.g., 118/72"/></div>
+          <div><label for="rr">Respirations (breaths/min)</label><input id="rr" name="rr" type="number" /></div>
+        </div>
+        <div class="grid two" style="margin-top:8px">
+          <div><label for="spo2">Oxygen Saturation (%)</label><input id="spo2" name="spo2" type="number" step="1" /></div>
+          <div><label for="baselineNotes">Baseline assessment notes</label><input id="baselineNotes" name="baselineNotes" type="text" placeholder="distress, rash, lung sounds, IV site patency, etc."/></div>
+        </div>
+      </fieldset>
+
+      <!-- IV / LDA used for transfusion -->
+      <fieldset>
+        <legend>Access for Transfusion (LDA)</legend>
+        <div class="checks">
+          <label><input type="radio" name="access" value="Peripheral IV" required/> Peripheral IV</label>
+          <label><input type="radio" name="access" value="PICC"/> PICC</label>
+          <label><input type="radio" name="access" value="CVC"/> CVC</label>
+        </div>
+        <div class="grid three">
+          <div>
+            <label for="site">Site</label>
+            <select id="site" name="site">
+              <option value="">—</option>
+              <option>Forearm</option>
+              <option>Dorsal hand</option>
+              <option>Antecubital</option>
+              <option>Upper arm</option>
+              <option>Central (specify vein in notes)</option>
+            </select>
+          </div>
+          <div>
+            <label for="gauge">Gauge (if PIV)</label>
+            <select id="gauge" name="gauge"><option value="">—</option><option>18</option><option>20</option><option>22</option></select>
+          </div>
+          <div>
+            <label for="patency">Patency Check</label>
+            <select id="patency" name="patency"><option value="">—</option><option>Flushes easily</option><option>Blood return present</option><option>Resistance noted</option></select>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Transfusion Start -->
+      <fieldset>
+        <legend>Transfusion Start</legend>
+        <div class="grid three">
+          <div><label for="startDate">Start Date</label><input id="startDate" name="startDate" type="date"/></div>
+          <div><label for="startTime">Start Time</label><input id="startTime" name="startTime" type="time"/></div>
+          <div><label for="rate">Initial Rate (mL/hr)</label><input id="rate" name="rate" type="number" min="0" step="1"/></div>
+        </div>
+        <div class="checks" style="margin-top:6px">
+          <label><input type="checkbox" name="monitoring" value="Stayed with patient first 15 minutes"/> Stayed with patient first 15 minutes</label>
+          <label><input type="checkbox" name="monitoring" value="Patient education provided (s/sx to report)"/> Patient education provided (s/sx to report)</label>
+        </div>
+      </fieldset>
+
+      <!-- Monitoring table -->
+      <fieldset>
+        <legend>Monitoring During Transfusion</legend>
+        <p class="helper">Record vitals at 15 min, 30 min, 60 min, and PRN per policy.</p>
+        <table id="monitorTbl">
+          <thead><tr><th>Time</th><th>T (°F)</th><th>HR</th><th>BP</th><th>RR</th><th>SpO₂</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><input type="time" name="mon_time_1"></td><td><input type="number" step="0.1" name="mon_t_1"></td><td><input type="number" name="mon_hr_1"></td><td><input type="text" name="mon_bp_1"></td><td><input type="number" name="mon_rr_1"></td><td><input type="number" name="mon_spo2_1"></td><td><input type="text" name="mon_notes_1"></td></tr>
+            <tr><td><input type="time" name="mon_time_2"></td><td><input type="number" step="0.1" name="mon_t_2"></td><td><input type="number" name="mon_hr_2"></td><td><input type="text" name="mon_bp_2"></td><td><input type="number" name="mon_rr_2"></td><td><input type="number" name="mon_spo2_2"></td><td><input type="text" name="mon_notes_2"></td></tr>
+            <tr><td><input type="time" name="mon_time_3"></td><td><input type="number" step="0.1" name="mon_t_3"></td><td><input type="number" name="mon_hr_3"></td><td><input type="text" name="mon_bp_3"></td><td><input type="number" name="mon_rr_3"></td><td><input type="number" name="mon_spo2_3"></td><td><input type="text" name="mon_notes_3"></td></tr>
+          </tbody>
+        </table>
+        <div class="actions" style="padding-top:8px"><button type="button" class="secondary" id="addRow">Add Row</button></div>
+      </fieldset>
+
+      <!-- Reaction screening -->
+      <fieldset>
+        <legend>Reaction Screening</legend>
+        <div class="checks">
+          <label><input type="checkbox" name="react" value="Fever/chills"/> Fever/chills</label>
+          <label><input type="checkbox" name="react" value="Urticaria/rash/pruritus"/> Urticaria/rash/pruritus</label>
+          <label><input type="checkbox" name="react" value="Dyspnea/wheezing"/> Dyspnea/wheezing</label>
+          <label><input type="checkbox" name="react" value="Back/chest pain"/> Back/chest pain</label>
+          <label><input type="checkbox" name="react" value="Hypotension/hypertension"/> Hypotension/hypertension</label>
+          <label><input type="checkbox" name="react" value="Hemoglobinuria"/> Hemoglobinuria</label>
+        </div>
+        <label for="reactActions">If any reaction suspected, actions taken</label>
+        <textarea id="reactActions" name="reactActions" placeholder="Stop transfusion, keep IV open with NS, notify provider/blood bank, send tubing/bag, labs, treat per orders, etc."></textarea>
+      </fieldset>
+
+      <!-- Completion -->
+      <fieldset>
+        <legend>Post‑Transfusion Documentation</legend>
+        <div class="grid three">
+          <div><label for="endTime">End Time</label><input id="endTime" name="endTime" type="time"/></div>
+          <div><label for="volume">Total Volume Infused (mL)</label><input id="volume" name="volume" type="number" min="0" step="1"/></div>
+          <div><label for="disposition">Unit Disposition</label>
+            <select id="disposition" name="disposition"><option value="">—</option><option>Completed — disposed per policy</option><option>Stopped early — returned to blood bank</option><option>Stopped due to reaction</option></select>
+          </div>
+        </div>
+        <div class="grid two" style="margin-top:8px">
+          <div><label for="postVitals">Post‑transfusion vitals</label><input id="postVitals" name="postVitals" type="text" placeholder="T/HR/BP/RR/SpO2"/></div>
+          <div><label for="teaching">Patient teaching reinforced</label><input id="teaching" name="teaching" type="text" placeholder="delayed reaction s/sx, who to call, etc."/></div>
+        </div>
+      </fieldset>
+
+      <!-- Sign‑off -->
+      <fieldset>
+        <legend>Sign‑off</legend>
+        <div class="grid two">
+          <div><label for="studentSig">Student signature (type name)</label><input id="studentSig" name="studentSig" type="text"/></div>
+          <div><label for="sigDate">Date Signed</label><input id="sigDate" name="sigDate" type="date"/></div>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" id="saveDraft">Save Draft</button>
+        <button type="button" id="exportJson" class="secondary">Export JSON</button>
+        <button type="button" id="printPage" class="secondary">Print / Save PDF</button>
+        <button type="reset" id="clearForm" class="secondary">Clear</button>
+        <span class="right"></span>
+        <button type="submit" class="success">Submit</button>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+      <div class="hide-print" style="font-size:13px; color:var(--muted)">To POST to your server/LMS, set <code>action</code> and <code>method</code> on the <code>&lt;form id="blood-form"&gt;</code> and remove the JS <em>preventDefault</em> in the submit handler.</div>
+    </form>
+  </div>
+
+  <script>
+    (function(){
+      const form = document.getElementById('blood-form');
+      const statusEl = document.getElementById('status');
+      const nameReq = document.getElementById('nameReq');
+
+      // Default dates
+      const today = new Date(); const pad = (n)=> String(n).padStart(2,'0');
+      const iso = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+      ['date','sigDate','expDate','startDate','dob'].forEach(id=>{ const el=document.getElementById(id); if(el && !el.value) el.value=iso; });
+
+      // Monitoring add row
+      document.getElementById('addRow').addEventListener('click', ()=>{
+        const tbody = document.querySelector('#monitorTbl tbody');
+        const idx = tbody.children.length + 1;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td><input type="time" name="mon_time_${idx}"></td>
+          <td><input type="number" step="0.1" name="mon_t_${idx}"></td>
+          <td><input type="number" name="mon_hr_${idx}"></td>
+          <td><input type="text" name="mon_bp_${idx}"></td>
+          <td><input type="number" name="mon_rr_${idx}"></td>
+          <td><input type="number" name="mon_spo2_${idx}"></td>
+          <td><input type="text" name="mon_notes_${idx}"></td>`;
+        tbody.appendChild(tr);
+      });
+
+      // Local storage helpers
+      const STORAGE_KEY = 'blood_admin_form_v1';
+      function serialize(){
+        const out={}; const fd=new FormData(form);
+        for (const [k,v] of fd.entries()){
+          if(out[k]){ if(!Array.isArray(out[k])) out[k]=[out[k]]; out[k].push(v);} else out[k]=v;
+        }
+        out._ts = Date.now();
+        return out;
+      }
+      function restore(data){
+        if(!data) return;
+        for (const [k,v] of Object.entries(data)){
+          if(k.startsWith('_')) continue;
+          const el = form.elements[k]; if(!el) continue;
+          if (el instanceof RadioNodeList){ el.value = v; }
+          else if (Array.isArray(v)){
+            v.forEach(val=>{ const box=form.querySelector(`[name="${k}"][value="${val}"]`); if(box) box.checked=true; });
+          } else { el.value = v; }
+        }
+      }
+      function saveDraft(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(serialize())); status('Draft saved.'); }
+      function loadDraft(){ try{ const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return; const data=JSON.parse(raw); restore(data); if(data._ts){ status(`Draft loaded (saved ${new Date(data._ts).toLocaleString()}).`);} }catch(e){}
+      }
+      function clearDraft(){ localStorage.removeItem(STORAGE_KEY); status('Local draft cleared.'); }
+      function status(msg){ statusEl.textContent = msg; }
+
+      document.getElementById('saveDraft').addEventListener('click', saveDraft);
+      document.getElementById('exportJson').addEventListener('click', ()=>{
+        const blob = new Blob([JSON.stringify(serialize(),null,2)], {type:'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        const nm = (form.studentName?.value||'student').replace(/\s+/g,'-');
+        a.download = `blood-admin_${nm}_${form.date?.value||iso}.json`;
+        document.body.appendChild(a); a.click(); a.remove();
+        status('JSON exported.');
+      });
+      document.getElementById('printPage').addEventListener('click', ()=> window.print());
+      document.getElementById('clearForm').addEventListener('click', ()=>{ setTimeout(()=> status('Form cleared.'),0); clearDraft(); });
+
+      // Submit (client-side). Change to real POST by adding form action/method and removing preventDefault
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const ok = form.studentName.value.trim().length>1 && !!form.productType.value;
+        nameReq.hidden = form.studentName.value.trim().length>1;
+        if(!ok){ status('Please enter your name and select a blood product type.'); return; }
+        saveDraft();
+        alert('Submission validated and saved locally on this device. Use Export JSON or Print/PDF to upload.');
+        status('Submission validated.');
+      });
+
+      loadDraft();
+    })();
+  </script>
+</body>
+</html>
